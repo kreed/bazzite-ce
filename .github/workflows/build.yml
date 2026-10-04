@@ -22,8 +22,16 @@ concurrency:
 
 jobs:
   build_push:
-    name: Build and push image
+    name: Build and push ${{ matrix.image_name }}
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image_name: bazzite-ce
+            base_image: ghcr.io/ublue-os/bazzite:stable
+          - image_name: bazzite-ce-deck
+            base_image: ghcr.io/ublue-os/bazzite-deck:stable
 
     permissions:
       contents: read
@@ -48,9 +56,9 @@ jobs:
 
       - name: Image Name
         id: image-name
+        env:
+          IMAGE_NAME: ${{ matrix.image_name }}
         run: |
-          IMAGE_NAME=$(just image_name)
-
           echo "IMAGE_NAME=${IMAGE_NAME}" >> $GITHUB_ENV
 
       - name: Default Tag
@@ -72,7 +80,8 @@ jobs:
         run: |
           just build \
             ${IMAGE_NAME} \
-            ${DEFAULT_TAG}
+            ${DEFAULT_TAG} \
+            ${{ matrix.base_image }}
 
       # This is optional, this provides smaller delta updates
       - name: Rechunk with Chunkah

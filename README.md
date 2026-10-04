@@ -22,3 +22,8 @@ Then rebase to bazzite-ce:
 ```bash
 sudo bootc switch --enforce-container-sigpolicy ghcr.io/kreed/bazzite-ce:latest
 ```
+
+A variant based on `bazzite-deck` is also available:
+```bash
+sudo bootc switch --enforce-container-sigpolicy ghcr.io/kreed/bazzite-ce-deck:latest
+```
