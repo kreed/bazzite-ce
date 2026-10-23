@@ -23,15 +23,21 @@ concurrency:
 jobs:
   build_push:
     name: Build and push ${{ matrix.image_name }}
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - image_name: bazzite-ce
             base_image: ghcr.io/ublue-os/bazzite:stable
+            runner: ubuntu-24.04
           - image_name: bazzite-ce-deck
             base_image: ghcr.io/ublue-os/bazzite-deck:stable
+            runner: ubuntu-24.04
+          # Armada publishes arm64 only, so its derivative builds natively on arm.
+          - image_name: armada-ce
+            base_image: ghcr.io/armada-os/armada:stable
+            runner: ubuntu-24.04-arm
 
     permissions:
       contents: read

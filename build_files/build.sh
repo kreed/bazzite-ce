@@ -7,14 +7,17 @@ cp -avf "/ctx/system_files"/. /
 
 ### Packages
 
-dnf5 -y copr enable kreed/quad9ctl
+# The quad9ctl COPR only builds x86_64, so the aarch64 (Armada) image goes without.
+if [[ "$(uname -m)" == x86_64 ]]; then
+  dnf5 -y copr enable kreed/quad9ctl
 
-INCLUDED_PACKAGES=(
-  quad9ctl
-  )
+  INCLUDED_PACKAGES=(
+    quad9ctl
+    )
 
-dnf5 -y install "${INCLUDED_PACKAGES[@]}"
-dnf5 -y copr disable kreed/quad9ctl
+  dnf5 -y install "${INCLUDED_PACKAGES[@]}"
+  dnf5 -y copr disable kreed/quad9ctl
+fi
 
 ### Nix
 
